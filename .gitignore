@@ -1,0 +1,23 @@
+*.userprefs
+*.exe.mdb
+
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+[Bb]in/
+[Oo]bj/
+
+packages/
+
+# Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
+!packages/*/build/
+
+# Enable nuget.exe in the .nuget folder (though normally executables are not tracked)
+!.nuget/NuGet.exe
+
+packages.config
+
+# Paket
+.paket/paket.exe
