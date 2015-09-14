@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="zhelpers.fs" />
+    <Compile Include="lbbroker.fs" />
     <Compile Include="rereq.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
@@ -53,6 +54,4 @@
       </ItemGroup>
     </When>
   </Choose>
-  <ItemGroup>
-  </ItemGroup>
 </Project>
