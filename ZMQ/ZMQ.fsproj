@@ -40,6 +40,7 @@
     <Compile Include="zhelpers.fs" />
     <Compile Include="lbbroker.fs" />
     <Compile Include="rereq.fs" />
+    <Compile Include="asyncsrv.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
