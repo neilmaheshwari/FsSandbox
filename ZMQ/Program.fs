@@ -13,9 +13,13 @@ let main argv =
 //    Socket.bind sink pipe
 //    let server = Context.rep context
 
-    async {peering1.main ["DC1"; "DC2"; "DC3"]} |> Async.Start // Start DC1 and connect to DC2 and DC3
-    async {peering1.main ["DC2"; "DC1"; "DC3"]} |> Async.Start // Start DC2 and connect to DC1 and DC3
-    async {peering1.main ["DC3"; "DC1"; "DC2"]} |> Async.Start // Start DC3 and connect to DC1 and DC2
+    let rng1 = new System.Random 1
+    let rng2 = new System.Random 2
+    let rng3 = new System.Random 3
+
+    async {peering1.main rng1 ["DC1"; "DC2"; "DC3"]} |> Async.Start // Start DC1 and connect to DC2 and DC3
+    async {peering1.main rng2 ["DC2"; "DC1"; "DC3"]} |> Async.Start // Start DC2 and connect to DC1 and DC3
+    async {peering1.main rng3 ["DC3"; "DC1"; "DC2"]} |> Async.Start // Start DC3 and connect to DC1 and DC2
 
     System.Console.ReadLine ()
     |> ignore
