@@ -13,7 +13,12 @@ let main argv =
 //    Socket.bind sink pipe
 //    let server = Context.rep context
 
-    asyncsrv.main ()
+    async {peering1.main ["DC1"; "DC2"; "DC3"]} |> Async.Start // Start DC1 and connect to DC2 and DC3
+    async {peering1.main ["DC2"; "DC1"; "DC3"]} |> Async.Start // Start DC2 and connect to DC1 and DC3
+    async {peering1.main ["DC3"; "DC1"; "DC2"]} |> Async.Start // Start DC3 and connect to DC1 and DC2
+
+    System.Console.ReadLine ()
+    |> ignore
 
     printfn "%A" argv
     0 // return an integer exit code
