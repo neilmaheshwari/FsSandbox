@@ -1,4 +1,8 @@
-﻿module peering2
+﻿#I @"../packages/fszmq/lib/net40"
+#r "fszmq.dll"
+#load "zhelpers.fs"
+
+module peering2 =
 
     open fszmq
 

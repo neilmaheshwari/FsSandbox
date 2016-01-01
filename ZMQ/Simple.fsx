@@ -1,4 +1,8 @@
-﻿module simple
+﻿#I @"../packages/fszmq/lib/net40"
+#r "fszmq.dll"
+#load "zhelpers.fs"
+
+module simple =
     
     open fszmq    
 

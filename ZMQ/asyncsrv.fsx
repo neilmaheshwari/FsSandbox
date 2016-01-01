@@ -1,4 +1,8 @@
-﻿module asyncsrv
+﻿#I @"../packages/fszmq/lib/net40"
+#r "fszmq.dll"
+#load "zhelpers.fs"
+
+module asyncsrv =
 
     open fszmq
     open zhelpers 

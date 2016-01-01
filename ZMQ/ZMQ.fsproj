@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{B9E33722-9B43-4C79-9589-6E196EEB771F}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>ZMQ</RootNamespace>
     <AssemblyName>ZMQ</AssemblyName>
   </PropertyGroup>
@@ -38,13 +38,12 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="zhelpers.fs" />
-    <Compile Include="lbbroker.fs" />
-    <Compile Include="rereq.fs" />
-    <Compile Include="asyncsrv.fs" />
-    <Compile Include="Simple.fs" />
-    <Compile Include="peering1.fs" />
-    <Compile Include="peering2.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="lbbroker.fsx" />
+    <Compile Include="rereq.fsx" />
+    <Compile Include="asyncsrv.fsx" />
+    <Compile Include="Simple.fsx" />
+    <Compile Include="peering1.fsx" />
+    <Compile Include="peering2.fsx" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
   <Choose>
