@@ -10,44 +10,59 @@ module peering2 =
     let private NBR_CLIENTS = 10
     [<Literal>] 
     let private NBR_WORKERS = 3
-    [<Literal>] 
-    let private WORKER_READY = "\001"
+
+    let private WORKER_READY = "\001"B // Signals worker is ready
 
     let private clientTask brokerName = 
         use context = new Context ()
         let client = Context.req context
         Socket.connect client <| sprintf "ipc://%s-localfe.ipc" brokerName
-        while true do
-            zhelpers.s_send client "Hello!"
-            let msg = zhelpers.s_recv client
-            stdout.WriteLine (sprintf "[Client] Client: %s" msg)
+        let rec loop () = 
+            Socket.send client "HELLO"B
+            client
+            |> Socket.recv
+            |> zhelpers.decode
+            |> sprintf "[Client] Client : %s"
+            |> stdout.WriteLine
+            loop ()
+        loop ()
 
-    let workerTask brokerName =
+    let private workerTask brokerName =
         use context = new Context ()
         let worker = Context.req context
         Socket.connect worker <| sprintf "ipc://%s-localbe.ipc" brokerName
-        zhelpers.s_send worker WORKER_READY
-        while true do
-            let msg = zhelpers.s_recv worker 
-            stdout.WriteLine (sprintf "[Worker] Worker: %s" msg) 
-            zhelpers.s_send worker "OK"
+        // Tell broker we are ready for work
+        Socket.send worker WORKER_READY
+        // Process messages as they arrive
+        let rec loop () = 
+            let msg = Socket.recvAll worker 
+            msg
+            |> Array.last
+            |> zhelpers.decode
+            |> sprintf "[Worker] Worker: %s"
+            |> stdout.WriteLine
+            msg.[Array.length msg - 1] <- "OK"B
+            Socket.sendAll worker msg
+            loop ()
+        loop ()
 
-    let main = function
-        | brokerName :: peers ->
-
+    let main (rng : System.Random) = function
+        | brokerName :: (_ :: _ as peers) ->
+            // First argument is this broker's name.
+            // Other arguments are our peers' names.
             stdout.WriteLine (sprintf "I: preparing broker at %s..." brokerName)
 
-            let ctx = new Context ()
+            use ctx = new Context ()
 
             // Bind cloud frontend to endpoint
             let cloudfe = Context.router ctx
-            Socket.bind cloudfe <| sprintf "ipc://%s-cloudfe.ipc" brokerName
+            Socket.bind cloudfe <| sprintf "ipc://%s-cloud.ipc" brokerName
 
             // Connect cloud backend to all peers
             let cloudbe = Context.router ctx
             for peer in peers do
                 stdout.WriteLine (sprintf "I: connecting to cloud frontend at '%s'" peer)
-                Socket.connect cloudbe <| sprintf "ipc://%s-cloudbe.ipc" peer
+                Socket.connect cloudbe <| sprintf "ipc://%s-cloud.ipc" peer
 
             // Prepare local frontend and backend
             let localfe = Context.router ctx
@@ -60,4 +75,16 @@ module peering2 =
             stdout.WriteLine "Press Enter when all brokers are started: "
             System.Console.ReadLine |> ignore
 
-        | [] -> failwith "No args passed in"
+            // Start local workers
+            for _ in 0 .. NBR_WORKERS do
+                async {workerTask brokerName} |> Async.Start
+
+            // Start local clients
+            for _ in 0 .. NBR_CLIENTS do
+                async {clientTask brokerName} |> Async.Start
+
+            while true do async {do! Async.Sleep 1000} |> Async.RunSynchronously //TODO
+
+        | _ -> failwith "No args passed in"
+
+    main (new System.Random 0) (Array.toList fsi.CommandLineArgs)
