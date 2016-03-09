@@ -1,4 +1,8 @@
-﻿module llbroker
+﻿#I @"../packages/fszmq/lib/net40"
+#r "fszmq.dll"
+#load "zhelpers.fs"
+
+module llbroker =
 
     open fszmq
     open zhelpers

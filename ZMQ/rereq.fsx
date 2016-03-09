@@ -1,4 +1,8 @@
-﻿module rereq
+﻿#I @"../packages/fszmq/lib/net40"
+#r "fszmq.dll"
+#load "zhelpers.fs"
+
+module rereq =
 
     open fszmq
     open zhelpers 
